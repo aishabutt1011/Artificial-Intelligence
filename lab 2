@@ -1,0 +1,106 @@
+# while loop
+#working of while loop in python
+#print Hello World 3 times using while loop
+c = 0 
+while (c < 3): 
+    c +=  1 
+    print("Hello World")
+    
+# single statement while block
+# counter = 0
+# while (counter == 0): print("Hello Geek")
+# for loop in python
+
+# Example1
+#  Iterating List
+print("List Iteration") 
+l = ["geeks", "for", "geeks"] 
+for i in l: 
+ print(i)
+#Example2
+# Iterating Tuple
+print("\nTuple Iteration") 
+t = ("geeks", "for", "geeks") 
+for i in t: 
+  print(i)
+
+#Example3
+# Iterating string
+print("\nString Iteration") 
+s = "Geeks" 
+for i in s : 
+ print(i)
+
+ # Iterating List by index
+ list = ["geeks", "for", "geeks"] 
+for index in range(len(list)): 
+    print (list[index])
+
+# print all letters except 'e' or 's'
+for letter in 'geeksforgeeks': 
+    # continue statement in loop
+    if letter == 'e' or letter == 's': 
+        continue 
+    print ("Current Letter :", letter) 
+    
+    # break statement in for loop
+for letter in 'geeksforgeeks': 
+# break the loop as soon it sees 'e' 
+# or 's' 
+    if letter == 'e' or letter == 's': 
+     break 
+    print ('Current Letter :', letter )
+
+#function defining and calling
+def my_function(): 
+ print("Hello from a function") 
+my_function()
+#function with parameters
+def name_function(fname):
+  print(fname+" Miqdad")
+name_function('Arooj')
+# default parameter
+# if you declare fuction with parameter and you call function without parameter than default parameter is used
+def my_function(country = "Norway"): print("I am from " + country) 
+my_function("Sweden")  
+my_function("India")  
+my_function()  
+my_function("Brazil") 
+# passing list as a parameter
+def my_function(food): 
+  for x in food: 
+    print(x) 
+fruits = ["apple", "banana", "cherry"] 
+my_function(fruits)
+my_function("Arooj")
+#function which return value
+def my_function(x): 
+  return 5 * x 
+print(my_function(3)) 
+print(my_function(5)) 
+print(my_function(9))
+
+#function parameters with key value
+def my_function(child3, child2, child1): 
+ print("The youngest child is " + child3) 
+my_function(child1 = "Emil", child2 = "Tobias", child3 = "Linus")
+
+# Create a class
+class My_Class: x=5
+# create object of my_class
+obj = My_Class() 
+print(obj.x)
+
+# use init() function to initialize class properties/values
+class Person: 
+ def __init__ (self, name, age): 
+   self.name = name 
+   self.age = age 
+ def myfunc(self): 
+  print("Hello my name is " + self.name)
+
+p1 = Person("John", 36)
+p1.myfunc()
+#p1 = Person("John", 36) 
+#print(p1.name) 
+#print(p1.age)
