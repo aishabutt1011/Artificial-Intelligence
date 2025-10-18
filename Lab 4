@@ -1,71 +1,69 @@
-# ------------------------------
+# ------------------------------------------------------------
 # TASK 1: Implementing Stack
-# ------------------------------
+# ------------------------------------------------------------
 
 class MyStack:
     def __init__(self):
-        # Initialize an empty list to store stack elements
-        self.items = []
+        # Initialize an empty list to represent the stack
+        self.stack_list = []
 
-    def push_item(self, val):
-        """Push (insert) an item onto the stack."""
-        self.items.append(val)
-        print(f"✅ Inserted {val} into stack")
+    def push_item(self, value):
+        """Insert (push) an element into the stack."""
+        self.stack_list.append(value)
+        print(f"✅ Inserted {value} into stack")
 
     def pop_item(self):
-        """Pop (remove) the top item from the stack."""
+        """Remove (pop) the top element from the stack."""
         if not self.is_empty():
-            removed = self.items.pop()
+            removed = self.stack_list.pop()
             print(f"❌ Removed {removed} from stack")
             return removed
         return "⚠️ Stack is empty"
 
     def is_empty(self):
         """Check if the stack is empty."""
-        return len(self.items) == 0
+        return len(self.stack_list) == 0
 
-    def show(self):
-        """Display all elements currently in the stack."""
-        print("📦 Current Stack:", self.items)
+    def show_stack(self):
+        """Display the current contents of the stack."""
+        print("📦 Current Stack:", self.stack_list)
 
-    def top(self):
-        """Return the top element of the stack without removing it."""
+    def top_element(self):
+        """Return the top element without removing it."""
         if not self.is_empty():
-            return self.items[-1]
+            return self.stack_list[-1]
         return "⚠️ Stack is empty"
 
 
-# ------------------------------
-# Stack Interaction
-# ------------------------------
+# -------------------- STACK DEMONSTRATION --------------------
 
-st = MyStack()
-st.push_item(10)
-st.push_item(20)
-st.show()
+stack_obj = MyStack()
+stack_obj.push_item(10)
+stack_obj.push_item(20)
+stack_obj.show_stack()
 print("\n")
 
-# Asking user to insert more elements
+# Insert more elements dynamically
 while True:
-    opt = int(input("Do you want to insert more elements? (1 = Yes, 0 = No): "))
-    if opt == 1:
-        elem = int(input("Enter element: "))
-        st.push_item(elem)
-    elif opt == 0:
-        st.show()
-        print("🙏 Thanks for inserting elements!")
+    user_choice = int(input("Do you want to insert more elements? (1 = Yes, 0 = No): "))
+    if user_choice == 1:
+        new_element = int(input("Enter element: "))
+        stack_obj.push_item(new_element)
+    elif user_choice == 0:
+        stack_obj.show_stack()
+        print("🙏 Thanks! All elements inserted.")
         break
     else:
         print("❗ Invalid choice. Try again...")
 print("\n")
 
-# Checking the top element
+# View the top element
 while True:
-    if not st.is_empty():
-        see = int(input("Do you want to check top element? (1 = Yes, 0 = No): ")) 
-        if see == 1:
-            print("🔝 Top element is:", st.top())
-        elif see == 0:
+    if not stack_obj.is_empty():
+        see_top = int(input("Do you want to check top element? (1 = Yes, 0 = No): "))
+        if see_top == 1:
+            print("🔝 Top element is:", stack_obj.top_element())
+        elif see_top == 0:
             print("👍 Okay!")
             break
         else:
@@ -75,15 +73,15 @@ while True:
         break
 print("\n")
 
-# Removing elements from the stack
+# Remove elements from the stack
 while True:
-    if not st.is_empty():
-        rem = int(input("Do you want to remove top element? (1 = Yes, 0 = No): ")) 
-        if rem == 1:
-            st.pop_item()
-        elif rem == 0:
+    if not stack_obj.is_empty():
+        remove_top = int(input("Do you want to remove top element? (1 = Yes, 0 = No): "))
+        if remove_top == 1:
+            stack_obj.pop_item()
+        elif remove_top == 0:
             print("👍 Okay!")
-            st.show()
+            stack_obj.show_stack()
             break
         else:
             print("❗ Invalid Choice. Try again...")
@@ -93,89 +91,87 @@ while True:
 print("\n")
 
 
-# ------------------------------
+# ------------------------------------------------------------
 # TASK 2: Implementing Queue
-# ------------------------------
+# ------------------------------------------------------------
 
 class MyQueue:
     def __init__(self):
-        # Initialize an empty list to store queue elements
-        self.items = []
+        # Initialize an empty list to represent the queue
+        self.queue_list = []
 
-    def add(self, val):
-        """Add (enqueue) an item at the end of the queue."""
-        self.items.append(val)
-        print(f"✅ Inserted {val} into Queue")
+    def enqueue(self, value):
+        """Add (enqueue) an element to the end of the queue."""
+        self.queue_list.append(value)
+        print(f"✅ Inserted {value} into Queue")
 
-    def remove(self):
-        """Remove (dequeue) the front item from the queue."""
+    def dequeue(self):
+        """Remove (dequeue) an element from the front of the queue."""
         if not self.is_empty():
-            removed = self.items.pop(0)
+            removed = self.queue_list.pop(0)
             print(f"❌ Removed {removed} from Queue")
             return removed
         return "⚠️ Queue is empty"
 
     def is_empty(self):
         """Check if the queue is empty."""
-        return len(self.items) == 0
+        return len(self.queue_list) == 0
 
     def peek_front(self):
-        """Return the front element without removing it."""
+        """Return the front element of the queue without removing it."""
         if not self.is_empty():
-            return self.items[0]
+            return self.queue_list[0]
         return "⚠️ Queue is empty"
 
-    def show(self):
+    def show_queue(self):
         """Display all elements currently in the queue."""
-        print("🚶 Current Queue:", self.items)
+        print("🚶 Current Queue:", self.queue_list)
 
 
-# ------------------------------
-# Queue Demonstration
-# ------------------------------
+# -------------------- QUEUE DEMONSTRATION --------------------
 
-qu = MyQueue()
-qu.add(10)
-qu.add(20)
-qu.add(30)
-qu.show()
+queue_obj = MyQueue()
+queue_obj.enqueue(10)
+queue_obj.enqueue(20)
+queue_obj.enqueue(30)
+queue_obj.show_queue()
 print("\n")
 
-qu.remove()
-qu.show()
+queue_obj.dequeue()
+queue_obj.show_queue()
 print("\n")
 
-print("🎯 Front element is:", qu.peek_front())
+print("🎯 Front element is:", queue_obj.peek_front())
 print("\n")
 
 
-# ------------------------------
-# TASK 3: Binary Search
-# ------------------------------
+# ------------------------------------------------------------
+# TASK 3: Binary Search Implementation
+# ------------------------------------------------------------
 
-def bin_search(numbers, key):
+def binary_search(num_list, target_value):
     """
     Perform binary search on a sorted list.
-    Returns the index if found, otherwise indicates not found.
+    Returns the index if found, otherwise a message.
     """
-    start = 0
-    end = len(numbers) - 1
+    start_index = 0
+    end_index = len(num_list) - 1
 
-    while start <= end:
-        mid = (start + end) // 2
-        if numbers[mid] == key:
-            return f"✅ Value found at index {mid}"
-        elif numbers[mid] < key:
-            start = mid + 1
+    while start_index <= end_index:
+        mid_index = (start_index + end_index) // 2
+
+        if num_list[mid_index] == target_value:
+            return f"✅ Value found at index {mid_index}"
+        elif num_list[mid_index] < target_value:
+            start_index = mid_index + 1
         else:
-            end = mid - 1
+            end_index = mid_index - 1
+
     return "❌ Value not present in the list"
 
 
-# ------------------------------
-# Binary Search Demonstration
-# ------------------------------
+# -------------------- BINARY SEARCH DEMONSTRATION --------------------
 
-nums = list(map(int, input("Enter a sorted list of numbers (space separated): ").split()))
-key_val = int(input("Enter the value to search: "))
-print(bin_search(nums, key_val))
+numbers = list(map(int, input("Enter a sorted list of numbers (space separated): ").split()))
+search_value = int(input("Enter the value to search: "))
+print(binary_search(numbers, search_value))
