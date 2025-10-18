@@ -1,0 +1,156 @@
+# ------------------------------------------------------------
+# TASK 1: Graph Implementation using Adjacency List
+# ------------------------------------------------------------
+# Structure:
+#                     1
+#                   / | \
+#                 2   7  8
+#                / \    / \
+#               3   6  9  12
+#              / \    / \
+#             4   5  10 11
+# ------------------------------------------------------------
+
+class Graph:
+    """A simple directed graph implementation using adjacency list."""
+
+    def __init__(self):
+        # Initialize an empty dictionary to store adjacency lists
+        self.adj_list = {}
+
+    def add_edge(self, u, v):
+        """
+        Add an edge from node 'u' to node 'v'.
+        If 'u' is not present in the adjacency list, initialize it.
+        """
+        if u not in self.adj_list:
+            self.adj_list[u] = []
+        self.adj_list[u].append(v)
+
+    def print_graph(self):
+        """Print the adjacency list of the graph."""
+        for node in self.adj_list:
+            print(f"{node} --> {self.adj_list[node]}")
+
+
+# Creating graph based on the given tree structure
+graph1 = Graph()
+
+# Adding edges
+graph1.add_edge(1, 2)
+graph1.add_edge(1, 7)
+graph1.add_edge(1, 8)
+graph1.add_edge(2, 3)
+graph1.add_edge(2, 6)
+graph1.add_edge(3, 4)
+graph1.add_edge(3, 5)
+graph1.add_edge(8, 9)
+graph1.add_edge(8, 12)
+graph1.add_edge(9, 10)
+graph1.add_edge(9, 11)
+
+# Display the adjacency list
+print("📘 Adjacency List for Numeric Tree:")
+graph1.print_graph()
+print("\n")
+
+
+# ------------------------------------------------------------
+# TASK 2: DFS (Depth-First Search) Implementation
+# ------------------------------------------------------------
+# Graph structure:
+#                       A
+#                   / / |  \   
+#                 B   F D    E
+#                / \    |   / | \
+#               K   J   G  C  H  I
+#              / \               |
+#             N   M              L
+# ------------------------------------------------------------
+
+class Graph:
+    """Graph implementation supporting DFS traversal."""
+
+    def __init__(self):
+        # Initialize adjacency list
+        self.adj_list = {}
+
+    def add_edge(self, u, v):
+        """
+        Add an edge from 'u' to 'v' and maintain reverse-sorted order
+        so that DFS processes nodes in a consistent LIFO manner.
+        """
+        if u not in self.adj_list:
+            self.adj_list[u] = []
+        self.adj_list[u].append(v)
+        self.adj_list[u].sort(reverse=True)  # Ensures deterministic DFS order
+
+    def print_graph(self):
+        """Display adjacency list of the graph."""
+        for node in self.adj_list:
+            print(f"{node} --> {self.adj_list[node]}")
+
+    def dfs_iterative(self, start, goal):
+        """
+        Perform iterative Depth-First Search (DFS) from start node to goal node.
+        Returns the path to goal if found, otherwise None.
+        """
+        stack = [start]  # LIFO stack
+        visited = set()
+        path = []
+
+        print("\n🚀 Starting DFS Traversal...\n")
+
+        while stack:
+            current_node = stack.pop()  # Pop last inserted node
+
+            if current_node not in visited:
+                print(f"Visiting node: {current_node}")
+                path.append(current_node)
+                visited.add(current_node)
+
+                # Goal check
+                if current_node == goal:
+                    print(f"\n🎯 Goal node '{goal}' found!")
+                    return path
+
+                # Add unvisited neighbors to stack
+                neighbors = self.adj_list.get(current_node, [])
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        stack.append(neighbor)
+
+        print(f"\n⚠️ Goal node '{goal}' not found.")
+        return None
+
+
+# -------------------- Creating the second graph --------------------
+graph2 = Graph()
+
+# Adding edges based on given tree structure
+graph2.add_edge('A', 'B')
+graph2.add_edge('A', 'F')
+graph2.add_edge('A', 'D')
+graph2.add_edge('A', 'E')
+graph2.add_edge('B', 'K')
+graph2.add_edge('B', 'J')
+graph2.add_edge('K', 'N')
+graph2.add_edge('K', 'M')
+graph2.add_edge('D', 'G')
+graph2.add_edge('E', 'C')
+graph2.add_edge('E', 'H')
+graph2.add_edge('E', 'I')
+graph2.add_edge('I', 'L')
+
+# Display adjacency list
+print("📘 Adjacency List for Alphabetical Graph:")
+graph2.print_graph()
+
+# Run DFS to find goal 'G'
+print("\n--- DFS Traversal ---")
+path_to_goal = graph2.dfs_iterative(start='A', goal='G')
+
+if path_to_goal:
+    print(f"\n✅ Path to goal 'G': {' -> '.join(path_to_goal)}")
+else:
+    print("\n❌ Goal not found in traversal.")
