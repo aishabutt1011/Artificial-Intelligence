@@ -1,0 +1,132 @@
+# ------------------------------------------------------------
+# LAB: Decision Tree Classifier using Entropy and Gini Index
+# ------------------------------------------------------------
+
+import numpy as np
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
+
+# ------------------------------------------------------------
+# STEP 1: Load and Prepare the Data
+# ------------------------------------------------------------
+
+# Load dataset from CSV file
+dataset = pd.read_csv("C:/Users/ST/OneDrive/Desktop/resturant.csv")
+
+# Separate features (X) and target label (y)
+X_features = dataset.drop("Wait", axis=1)
+y_target = dataset["Wait"]
+
+# Convert categorical data into numeric using one-hot encoding
+X_encoded = pd.get_dummies(X_features)
+
+print("✅ Data successfully loaded and preprocessed!\n")
+print("Feature Columns:", list(X_encoded.columns))
+print("\nTarget Variable:", y_target.name)
+print("-" * 60)
+
+
+# ------------------------------------------------------------
+# STEP 2: Train Decision Tree (Entropy Criterion)
+# ------------------------------------------------------------
+
+# Create Decision Tree model using Entropy
+model_entropy = DecisionTreeClassifier(criterion="entropy", max_depth=4, random_state=42)
+model_entropy.fit(X_encoded, y_target)
+
+# ------------------------------------------------------------
+# STEP 3: Visualize the Decision Tree (Entropy)
+# ------------------------------------------------------------
+
+plt.figure(figsize=(20, 10))
+plot_tree(
+    model_entropy,
+    feature_names=X_encoded.columns,
+    class_names=["No", "Yes"],
+    filled=True,
+)
+plt.title("Decision Tree (Criterion = Entropy, Depth = 4)")
+plt.show()
+
+# Evaluate model accuracy
+y_pred_entropy = model_entropy.predict(X_encoded)
+print("Training Accuracy (Entropy, Depth=4):", accuracy_score(y_target, y_pred_entropy))
+print("-" * 60)
+
+
+# ------------------------------------------------------------
+# STEP 4: Train Decision Tree (Gini Criterion)
+# ------------------------------------------------------------
+
+model_gini = DecisionTreeClassifier(criterion="gini", max_depth=4, random_state=42)
+model_gini.fit(X_encoded, y_target)
+
+plt.figure(figsize=(20, 10))
+plot_tree(
+    model_gini,
+    feature_names=X_encoded.columns,
+    class_names=["No", "Yes"],
+    filled=True,
+)
+plt.title("Decision Tree (Criterion = Gini, Depth = 4)")
+plt.show()
+
+# Evaluate accuracy for Gini-based model
+y_pred_gini = model_gini.predict(X_encoded)
+print("Training Accuracy (Gini, Depth=4):", accuracy_score(y_target, y_pred_gini))
+print("-" * 60)
+
+
+# ------------------------------------------------------------
+# STEP 5: Limit Tree Depth = 2 (Entropy)
+# ------------------------------------------------------------
+
+model_entropy_depth2 = DecisionTreeClassifier(criterion="entropy", max_depth=2, random_state=42)
+model_entropy_depth2.fit(X_encoded, y_target)
+
+plt.figure(figsize=(20, 10))
+plot_tree(
+    model_entropy_depth2,
+    feature_names=X_encoded.columns,
+    class_names=["No", "Yes"],
+    filled=True,
+)
+plt.title("Decision Tree (Criterion = Entropy, Depth = 2)")
+plt.show()
+
+# Accuracy with limited depth
+y_pred_entropy2 = model_entropy_depth2.predict(X_encoded)
+print("Training Accuracy (Entropy, Depth=2):", accuracy_score(y_target, y_pred_entropy2))
+print("-" * 60)
+
+
+# ------------------------------------------------------------
+# STEP 6: Remove an Attribute ("Reservation") and Retrain
+# ------------------------------------------------------------
+
+# Drop the 'Reservation' column and encode again
+X_no_reservation = dataset.drop(["Wait", "Reservation"], axis=1)
+X_no_reservation_encoded = pd.get_dummies(X_no_reservation)
+
+# Retrain model
+model_no_reservation = DecisionTreeClassifier(criterion="entropy", max_depth=4, random_state=42)
+model_no_reservation.fit(X_no_reservation_encoded, y_target)
+
+plt.figure(figsize=(20, 10))
+plot_tree(
+    model_no_reservation,
+    feature_names=X_no_reservation_encoded.columns,
+    class_names=["No", "Yes"],
+    filled=True,
+)
+plt.title("Decision Tree (Without 'Reservation' Attribute)")
+plt.show()
+
+# Accuracy without Reservation feature
+y_pred_no_reservation = model_no_reservation.predict(X_no_reservation_encoded)
+print("Training Accuracy (Without 'Reservation'):", accuracy_score(y_target, y_pred_no_reservation))
+print("-" * 60)
+
+
