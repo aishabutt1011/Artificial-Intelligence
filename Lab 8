@@ -1,0 +1,252 @@
+# ------------------------------------------------------------
+# TASK 1: Greedy Best-First Search (GBFS)
+# ------------------------------------------------------------
+
+from heapq import heappush, heappop
+
+class GraphGreedy:
+    """Graph class for Greedy Best-First Search implementation."""
+
+    def __init__(self):
+        self.adj_list = {}
+
+    def add_edge(self, node1, node2):
+        """Add an undirected edge between node1 and node2."""
+        if node1 not in self.adj_list:
+            self.adj_list[node1] = []
+        if node2 not in self.adj_list:
+            self.adj_list[node2] = []
+        if node2 not in self.adj_list[node1]:
+            self.adj_list[node1].append(node2)
+        if node1 not in self.adj_list[node2]:
+            self.adj_list[node2].append(node1)
+
+    def greedy_best_first(self, start, goal, heuristic):
+        """Perform Greedy Best-First Search using given heuristic values."""
+        visited = set()
+        priority_queue = []
+
+        heappush(priority_queue, (heuristic[start], start))
+        visited.add(start)
+
+        print("🔹 Starting Greedy Best-First Search...\n")
+
+        while priority_queue:
+            _, current_node = heappop(priority_queue)
+            print(f"Visiting: {current_node}")
+
+            if current_node == goal:
+                print(f"\n✅ Goal node '{goal}' found using Greedy Search!")
+                return True
+
+            for neighbor in self.adj_list[current_node]:
+                if neighbor not in visited:
+                    heappush(priority_queue, (heuristic[neighbor], neighbor))
+                    visited.add(neighbor)
+
+        print(f"❌ Goal node '{goal}' not found.")
+        return False
+
+
+# ---------- Example Usage ----------
+greedy_graph = GraphGreedy()
+greedy_graph.add_edge("A", "B")
+greedy_graph.add_edge("A", "C")
+greedy_graph.add_edge("B", "D")
+greedy_graph.add_edge("B", "E")
+greedy_graph.add_edge("C", "F")
+greedy_graph.add_edge("E", "G")
+
+# Smaller heuristic value = closer to goal
+heuristic_values = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 10,
+    "E": 1,
+    "F": 2,
+    "G": 0
+}
+
+greedy_graph.greedy_best_first("A", "G", heuristic_values)
+
+
+# ------------------------------------------------------------
+# TASK 2: A* Search Algorithm
+# ------------------------------------------------------------
+
+from collections import defaultdict
+
+class GraphAStar:
+    """Graph class for A* Search implementation."""
+
+    def __init__(self):
+        self.adj_list = {}
+
+    def add_edge(self, node1, node2, cost=1):
+        """Add an undirected edge with given cost."""
+        if node1 not in self.adj_list:
+            self.adj_list[node1] = []
+        if node2 not in self.adj_list:
+            self.adj_list[node2] = []
+        self.adj_list[node1].append((node2, cost))
+        self.adj_list[node2].append((node1, cost))
+
+    def a_star(self, start, goal, heuristic):
+        """
+        Perform A* Search to find the lowest-cost path to the goal.
+        f(n) = g(n) + h(n)
+        """
+        open_list = []  # priority queue
+        heappush(open_list, (heuristic[start], 0, start))  # (f, g, node)
+
+        g_costs = defaultdict(lambda: float("inf"))
+        g_costs[start] = 0
+
+        closed_set = set()
+
+        print("\n🔹 Starting A* Search...\n")
+
+        while open_list:
+            f, g, current_node = heappop(open_list)
+            print(f"Exploring: {current_node} | f={f}, g={g}")
+
+            if current_node == goal:
+                print(f"\n✅ Goal '{goal}' found with total cost {g} using A* Search!")
+                return True
+
+            if current_node in closed_set:
+                continue
+            closed_set.add(current_node)
+
+            for neighbor, cost in self.adj_list[current_node]:
+                g_new = g + cost
+                if g_new < g_costs[neighbor]:
+                    g_costs[neighbor] = g_new
+                    f_new = g_new + heuristic[neighbor]
+                    heappush(open_list, (f_new, g_new, neighbor))
+
+        print(f"❌ Goal '{goal}' not found.")
+        return False
+
+
+# ---------- Example Usage ----------
+astar_graph = GraphAStar()
+astar_graph.add_edge("A", "B", 1)
+astar_graph.add_edge("A", "C", 3)
+astar_graph.add_edge("B", "D", 1)
+astar_graph.add_edge("B", "E", 3)
+astar_graph.add_edge("C", "F", 1)
+astar_graph.add_edge("E", "G", 1)
+
+heuristic_costs = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 10,
+    "E": 1,
+    "F": 2,
+    "G": 0
+}
+
+astar_graph.a_star("A", "G", heuristic_costs)
+
+
+# ------------------------------------------------------------
+# TASK 3: 8-Puzzle Problem using A* Search
+# ------------------------------------------------------------
+
+import heapq
+
+class PuzzleState:
+    """Class to represent each state of the 8-puzzle board."""
+
+    def __init__(self, board, parent=None, move="", depth=0):
+        self.board = board
+        self.parent = parent
+        self.move = move
+        self.depth = depth
+        self.f = 0  # total cost (f = g + h)
+
+    def __lt__(self, other):
+        """Define priority based on lowest f value."""
+        return self.f < other.f
+
+    def find_zero(self):
+        """Find the position of the empty space (0)."""
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == 0:
+                    return i, j
+
+    def generate_children(self):
+        """Generate all valid next moves from the current board."""
+        children = []
+        x, y = self.find_zero()
+        moves = {"Up": (x - 1, y), "Down": (x + 1, y),
+                 "Left": (x, y - 1), "Right": (x, y + 1)}
+
+        for move, (nx, ny) in moves.items():
+            if 0 <= nx < 3 and 0 <= ny < 3:
+                new_board = [row[:] for row in self.board]
+                new_board[x][y], new_board[nx][ny] = new_board[nx][ny], new_board[x][y]
+                children.append(PuzzleState(new_board, self, move, self.depth + 1))
+        return children
+
+
+def heuristic_misplaced(board, goal):
+    """Heuristic: number of misplaced tiles."""
+    count = 0
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] != 0 and board[i][j] != goal[i][j]:
+                count += 1
+    return count
+
+
+def a_star_puzzle(start, goal):
+    """Solve 8-puzzle using A* search with misplaced tile heuristic."""
+    open_list = []
+    closed_set = set()
+
+    start_state = PuzzleState(start)
+    start_state.f = heuristic_misplaced(start, goal)
+    heapq.heappush(open_list, start_state)
+
+    print("\n🔹 Solving 8-Puzzle Problem using A* Search...\n")
+
+    while open_list:
+        current = heapq.heappop(open_list)
+
+        if current.board == goal:
+            # Reconstruct path
+            path = []
+            while current.parent:
+                path.append(current.move)
+                current = current.parent
+            path.reverse()
+            print(f"✅ Goal reached in {len(path)} moves: {path}")
+            return path
+
+        closed_set.add(tuple(map(tuple, current.board)))
+
+        for child in current.generate_children():
+            if tuple(map(tuple, child.board)) in closed_set:
+                continue
+            child.f = child.depth + heuristic_misplaced(child.board, goal)
+            heapq.heappush(open_list, child)
+
+    print("❌ No solution found.")
+    return None
+
+
+# ---------- Example Usage ----------
+start_state = [[1, 2, 3],
+               [4, 0, 6],
+               [7, 5, 8]]
+
+goal_state = [[1, 2, 3],
+              [4, 5, 6],
+              [7, 8, 0]]
+
+a_star_puzzle(start_state, goal_state)
