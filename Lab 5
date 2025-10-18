@@ -1,0 +1,148 @@
+# ------------------------------------------------------------
+# TASK 1: Graph Implementation using Dictionary (Adjacency List)
+# ------------------------------------------------------------
+
+# A simple undirected graph represented as an adjacency list (dictionary)
+graph_adj_list = {
+    0: [1, 4],
+    1: [0, 2, 3, 4],
+    2: [1, 3],
+    3: [1, 2, 4],
+    4: [0, 1, 3]
+}
+
+# Display the graph connections
+print("📘 Graph Representation (Adjacency List):")
+for node, neighbors in graph_adj_list.items():
+    print(f"Node {node} is connected to {neighbors}")
+print("\n")
+
+
+# ------------------------------------------------------------
+# TASK 2: Breadth-First Search (BFS) Traversal
+# ------------------------------------------------------------
+
+from collections import deque
+
+# Graph represented as adjacency list
+graph_bfs = {
+    'A': ['B', 'F', 'D', 'E'],
+    'B': ['K', 'J'],
+    'K': ['N', 'M'],
+    'J': [],
+    'N': [],
+    'M': [],
+    'F': [],
+    'D': ['G'],
+    'G': [],
+    'E': ['C', 'H', 'I'],
+    'C': [],
+    'H': [],
+    'I': ['L'],
+    'L': []
+}
+
+def bfs(graph, start_node, goal_node):
+    """
+    Perform Breadth-First Search (BFS) on the given graph.
+    Traverses level by level until the goal node is found.
+    """
+    visited = set()             # Keeps track of visited nodes
+    queue = deque([start_node]) # Initialize queue with starting node
+
+    print("🔍 Starting BFS Traversal...\n")
+
+    while queue:
+        # Dequeue a node from the queue
+        current_node = queue.popleft()
+        print("Visiting:", current_node)
+
+        # If the goal is found, stop the search
+        if current_node == goal_node:
+            print("🎯 Goal node found:", current_node)
+            return
+
+        # Mark current node as visited and enqueue its unvisited neighbors
+        if current_node not in visited:
+            visited.add(current_node)
+            queue.extend(graph[current_node])
+
+    print("⚠️ Goal node not found in the graph.")
+
+# Run BFS
+print("BFS Traversal Example:\n")
+bfs(graph_bfs, 'A', 'G')
+print("\n")
+
+
+# ------------------------------------------------------------
+# TASK 3: Priority Queue Implementation
+# ------------------------------------------------------------
+
+class PriorityQueue:
+    """A simple Priority Queue where lower numbers mean higher priority."""
+    
+    def __init__(self):
+        # Initialize an empty list to store elements as (priority, item) tuples
+        self.priority_list = []
+
+    def enqueue(self, item, priority):
+        """
+        Insert an item into the queue based on its priority.
+        Lower priority number = higher priority.
+        """
+        new_element = (priority, item)
+        inserted = False
+
+        # Insert element in correct position based on priority
+        for i in range(len(self.priority_list)):
+            if self.priority_list[i][0] > priority:
+                self.priority_list.insert(i, new_element)
+                inserted = True
+                break
+        
+        # If not inserted, append to the end (lowest priority)
+        if not inserted:
+            self.priority_list.append(new_element)
+
+        print(f"✅ Enqueued '{item}' with priority {priority}")
+
+    def dequeue(self):
+        """Remove and return the element with the highest priority (lowest number)."""
+        if self.is_empty():
+            print("⚠️ Queue is empty! Nothing to dequeue.")
+            return None
+        removed_item = self.priority_list.pop(0)[1]
+        print(f"❌ Dequeued '{removed_item}'")
+        return removed_item
+
+    def peek(self):
+        """Return (but do not remove) the highest-priority element."""
+        if self.is_empty():
+            return None
+        return self.priority_list[0][1]
+
+    def is_empty(self):
+        """Check if the queue is empty."""
+        return len(self.priority_list) == 0
+
+    def display(self):
+        """Display the elements of the queue with their priorities."""
+        print("\n📋 Current Queue (Highest → Lowest Priority):")
+        if self.is_empty():
+            print("Queue is empty.")
+        else:
+            for priority, item in self.priority_list:
+                print(f"{item} (Priority: {priority})")
+
+
+# Example usage of PriorityQueue
+print("Priority Queue Example:\n")
+pq = PriorityQueue()
+pq.enqueue("Task A", 3)
+pq.enqueue("Task B", 1)
+pq.enqueue("Task C", 2)
+
+pq.display()
+print("\nDequeued item:", pq.dequeue())
+pq.display()
