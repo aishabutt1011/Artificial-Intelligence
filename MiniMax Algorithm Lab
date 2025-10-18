@@ -1,0 +1,63 @@
+# MiniMax Algorithm 
+def minimax(depth, node_index, is_maximizing_player, leaf_values, max_depth):
+    # Base case: if we've reached a leaf node
+    if depth == max_depth:
+        leaf_offset = (2 ** max_depth) - 1
+        return leaf_values[node_index - leaf_offset]
+
+    if is_maximizing_player:
+        best_value = float('-inf')
+        # Explore left and right child nodes
+        for child_index in [2 * node_index + 1, 2 * node_index + 2]:
+            value = minimax(depth + 1, child_index, False, leaf_values, max_depth)
+            best_value = max(best_value, value)
+        return best_value
+    else:
+        best_value = float('inf')
+        # Explore left and right child nodes
+        for child_index in [2 * node_index + 1, 2 * node_index + 2]:
+            value = minimax(depth + 1, child_index, True, leaf_values, max_depth)
+            best_value = min(best_value, value)
+        return best_value
+
+
+# Example usage
+leaf_values = [3, 5, 2, 9]     # Values at leaf nodes
+tree_height = 2               # Tree depth
+
+print("Optimal value (without Alpha-Beta):", minimax(0, 0, True, leaf_values, tree_height))
+
+# MiniMax Algorithm with Alpha-Beta Pruning
+def minimax(depth, node_index, is_maximizing_player, leaf_values, max_depth, alpha, beta):
+    # Base case: if we've reached a leaf node
+    if depth == max_depth:
+        leaf_offset = (2 ** max_depth) - 1
+        return leaf_values[node_index - leaf_offset]
+
+    if is_maximizing_player:
+        best_value = float('-inf')
+        # Explore child nodes
+        for child_index in [2 * node_index + 1, 2 * node_index + 2]:
+            value = minimax(depth + 1, child_index, False, leaf_values, max_depth, alpha, beta)
+            best_value = max(best_value, value)
+            alpha = max(alpha, best_value)  # Update alpha
+            if beta <= alpha:
+                break  # Prune the remaining branches
+        return best_value
+    else:
+        best_value = float('inf')
+        # Explore child nodes
+        for child_index in [2 * node_index + 1, 2 * node_index + 2]:
+            value = minimax(depth + 1, child_index, True, leaf_values, max_depth, alpha, beta)
+            best_value = min(best_value, value)
+            beta = min(beta, best_value)  # Update beta
+            if beta <= alpha:
+                break  # Prune the remaining branches
+        return best_value
+
+
+# Example usage
+leaf_values = [4, 8, 9, 3, 2, -2, 9, -1]  # Values at leaf nodes
+tree_height = 3                          # Tree depth
+
+print("Optimal value (with Alpha-Beta):", minimax(0, 0, True, leaf_values, tree_height, float('-inf'), float('inf')))
